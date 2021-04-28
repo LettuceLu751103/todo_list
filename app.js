@@ -4,6 +4,9 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 const app = express()
 const port = 3000
+const Todo = require('./models/todo')
+
+
 
 app.use(express.static('public'))
 
@@ -23,8 +26,15 @@ db.once('open', () => {
 })
 
 app.get('/', (req, res) => {
+  Todo.find()
+    .lean()
+    .then(todo => {
+      res.render('index', { todos: todo })
+    })
+    .catch(error => {
+      console.log(error)
+    })
 
-  res.render('index')
 })
 
 
