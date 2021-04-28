@@ -5,11 +5,11 @@ const exphbs = require('express-handlebars')
 const app = express()
 const port = 3000
 const Todo = require('./models/todo')
-
+const bodyParser = require('body-parser')
 
 
 app.use(express.static('public'))
-
+app.use(bodyParser.urlencoded({ extended: true }))
 // 配置網頁模板區域
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
@@ -37,7 +37,35 @@ app.get('/', (req, res) => {
 
 })
 
+app.get('/todos/new', (req, res) => {
+  res.render('new')
+})
 
+app.post('/todos', (req, res) => {
+  console.log(req.body)
+  const name = req.body
+  return Todo.create(name)
+    .then(() => {
+      res.redirect('/')
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+
+})
+
+app.get('/todos/:id', (req, res) => {
+  return Todo.findById(req.params.id)
+    .lean()
+    .then((todo) => {
+      res.render('detail', { todo })
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+})
 
 app.listen(port, () => {
   console.log(`app is running on http://localhost:${port}`)
