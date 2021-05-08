@@ -28,6 +28,7 @@ db.once('open', () => {
 app.get('/', (req, res) => {
   Todo.find()
     .lean()
+    .sort({ _id: 'desc' })
     .then(todo => {
       res.render('index', { todos: todo })
     })
