@@ -83,10 +83,17 @@ app.get('/todos/:id/edit', (req, res) => {
 
 app.post('/todos/:id/edit', (req, res) => {
   const id = req.params.id
-  const name = req.body.name
+  // const name = req.body.name
+  // const isDone = req.body.isDone
+  // 改成解構賦值方式
+  console.log(req.body)
+  const { name, isDone } = req.body
   Todo.findById(id)
     .then(todo => {
+
       todo.name = name
+      todo.isDone = isDone === 'on'
+
       todo.save()
 
     })
