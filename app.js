@@ -6,7 +6,7 @@ const app = express()
 const port = 3000
 const Todo = require('./models/todo')
 const bodyParser = require('body-parser')
-
+const methodOverride = require('method-override')
 
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
+app.use(methodOverride('_method'))
 
 mongoose.connect('mongodb://localhost/todo-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -82,7 +83,7 @@ app.get('/todos/:id/edit', (req, res) => {
 
 })
 
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id
   // const name = req.body.name
   // const isDone = req.body.isDone
@@ -106,7 +107,7 @@ app.post('/todos/:id/edit', (req, res) => {
     })
 })
 
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   Todo.findById(id)
     .then(todo => {
