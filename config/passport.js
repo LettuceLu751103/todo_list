@@ -2,9 +2,11 @@ const passport = require('passport')
 
 const LocalStrategy = require('passport-local').Strategy
 
+const User = require('../models/user.js')
+
 module.exports = app => {
-  app.use(passport.serializeUser())
-  app.use(passport.deserializeUser())
+  app.use(passport.initialize())
+  app.use(passport.session())
 
   // 設定本地登入策略
   passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {

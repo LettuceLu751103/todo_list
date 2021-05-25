@@ -9,7 +9,7 @@ const routes = require('./routes')
 const session = require('express-session')
 const usePassport = require('./config/passport')
 
-
+usePassport(app)
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 // 配置網頁模板區域
@@ -26,7 +26,7 @@ app.use(session({
 app.use(methodOverride('_method'))
 
 require('./config/mongoose')
-usePassport(app)
+
 app.use(routes)
 
 
