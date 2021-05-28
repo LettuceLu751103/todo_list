@@ -24,12 +24,30 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   console.log('POST /register')
+  const errors = []
   const { name, email, password, confirmPassword } = req.body
   console.log(`name: ${name}, email: ${email}, password: ${password}`)
+  if (!name || !email || !password || !confirmPassword) {
+    errors.push({ message: '所有欄位都是必填的' })
+  }
+  if (password !== confirmPassword) {
+    errors.push({ message: '密碼與確認密碼不相符' })
+  }
+  if (errors.length) {
+    return res.render('register', {
+      errors,
+      name,
+      email,
+      password,
+      confirmPassword
+    })
+  }
   User.findOne({ email: email })
     .then(userData => {
       if (userData) {
+        errors.push({ message: '這個 Email 已經註冊過了。' })
         res.render('register', {
+          errors,
           name,
           email,
           password,
@@ -37,10 +55,6 @@ router.post('/register', (req, res) => {
         })
       } else {
         return User.create({ name: name, email: email, password: password })
-          .then(result => {
-            console.log(result)
-
-          })
           .then(() => {
             res.redirect('/')
           })
@@ -57,6 +71,7 @@ router.post('/register', (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.logout()
+  req.flash('success_msg', '你已經成功登出。')
   res.redirect('/users/login')
 })
 module.exports = router
