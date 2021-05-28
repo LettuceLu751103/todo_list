@@ -1,5 +1,6 @@
+<a class="btn btn-outline-primary" href="/todos/{{todo._id}}">Back</a>
 <form action="/todos/{{todo._id}}?_method=PUT" method="post">
-  <div class="input-group mb-3">
+  <div class="input-group mb-3 mt-3">
     <div class="input-group-prepend">
       <div class="input-group-text">
         <input type="checkbox" name="isDone" {{#if todo.isDone}} checked {{/if}}>

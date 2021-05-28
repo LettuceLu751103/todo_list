@@ -1,5 +1,6 @@
-<form action="/todos/{{ todo._id }}/delete" method="POST" style="display: inline;">
-  <div class="input-group mb-3">
+<a class="btn btn-outline-primary" href="/">Back</a>
+<form action="/todos/{{ todo._id }}?_method=DELETE" method="POST" style="display: inline;">
+  <div class="input-group mb-3 mt-3">
     <div class="input-group-prepend">
       <div class="input-group-text">
         <input type="checkbox" name="isDone" {{#if todo.isDone }} checked {{/if}} disabled>

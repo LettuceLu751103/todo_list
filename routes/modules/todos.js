@@ -10,8 +10,9 @@ routers.get('/new', (req, res) => {
 
 routers.post('/', (req, res) => {
   console.log(req.body)
-  const name = req.body
-  return Todo.create(name)
+  const name = req.body.name
+  const userId = req.user._id
+  return Todo.create({ name, userId })
     .then(() => {
       res.redirect('/')
     })
@@ -23,7 +24,9 @@ routers.post('/', (req, res) => {
 })
 
 routers.get('/:id', (req, res) => {
-  return Todo.findById(req.params.id)
+  const _id = req.params.id
+  const userId = req.user._id
+  return Todo.findOne({ _id, userId })
     .lean()
     .then((todo) => {
       res.render('detail', { todo })
@@ -35,9 +38,9 @@ routers.get('/:id', (req, res) => {
 })
 
 routers.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  console.log(id)
-  Todo.findById(id)
+  const _id = req.params.id
+  const userId = req.user._id
+  Todo.findOne({ _id, userId })
     .lean()
     .then(todo => {
       res.render('edit', { todo })
@@ -49,23 +52,19 @@ routers.get('/:id/edit', (req, res) => {
 })
 
 routers.put('/:id', (req, res) => {
-  const id = req.params.id
-  // const name = req.body.name
-  // const isDone = req.body.isDone
+  const _id = req.params.id
+  const userId = req.user._id
   // 改成解構賦值方式
-  console.log(req.body)
   const { name, isDone } = req.body
-  Todo.findById(id)
+  Todo.findOne({ _id, userId })
     .then(todo => {
-
       todo.name = name
       todo.isDone = isDone === 'on'
-
+      todo.userId = userId
       todo.save()
-
     })
     .then(() =>
-      res.redirect(`/todos/${id}`)
+      res.redirect(`/todos/${_id}`)
     )
     .catch(error => {
       console.log(error)
@@ -73,8 +72,9 @@ routers.put('/:id', (req, res) => {
 })
 
 routers.delete('/:id', (req, res) => {
-  const id = req.params.id
-  Todo.findById(id)
+  const _id = req.params.id
+  const userId = req.user._id
+  Todo.findOne({ _id, userId })
     .then(todo => {
       todo.remove()
     })
